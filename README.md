@@ -1,6 +1,6 @@
 # ComfyUI Ruby Client
 
-Ruby client for the [ComfyUI](https://github.com/comfyanonymous/ComfyUI) API. Includes workflow templates for text-to-image generation (Flux.1-dev) and SVG vectorization (VTracer).
+Thin Ruby client for the [ComfyUI](https://github.com/comfyanonymous/ComfyUI) REST API. Queue workflows, poll for completion, upload images, download outputs.
 
 ## Installation
 
@@ -17,22 +17,19 @@ ComfyUI.configure do |c|
   c.base_url = "http://comfyui.local:8188"
 end
 
-result = ComfyUI.generate_image("a friendly robot icon", width: 512, height: 512, steps: 20)
-File.binwrite("output.png", result[:data])
+# Check system status
+ComfyUI.system_stats
 
-uploaded = ComfyUI.upload_image(result[:data], filename: "robot.png")
-svg = ComfyUI.vectorize(uploaded)
-File.binwrite("output.svg", svg[:data])
+# Queue any workflow and wait for results
+prompt_id = ComfyUI.queue_prompt(workflow_hash)
+outputs = ComfyUI.wait_for_completion(prompt_id)
+
+# Upload an image
+name = ComfyUI.upload_image(File.binread("input.png"), filename: "input.png")
+
+# Download an output
+data = ComfyUI.download_output("output_00001_.png")
 ```
-
-## CLI
-
-```bash
-comfyui-generate "a rocket ship icon, flat design"
-comfyui-vectorize output.png
-```
-
-Environment: `COMFYUI_URL`, `OUTPUT_DIR`, `WIDTH`, `HEIGHT`, `STEPS`.
 
 ## License
 

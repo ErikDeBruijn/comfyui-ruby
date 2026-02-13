@@ -1,6 +1,5 @@
 require "json"
 require "securerandom"
-require "fileutils"
 
 module ComfyUI
   class Error < StandardError; end
@@ -33,13 +32,14 @@ module ComfyUI
       @client = nil
     end
 
-    def generate_image(...) = client.generate_image(...)
-    def vectorize(...) = client.vectorize(...)
+    def queue_prompt(...) = client.queue_prompt(...)
+    def wait_for_completion(...) = client.wait_for_completion(...)
     def upload_image(...) = client.upload_image(...)
+    def download_output(...) = client.download_output(...)
+    def fetch_history(...) = client.fetch_history(...)
     def system_stats = client.system_stats
   end
 end
 
 require_relative "comfyui/version"
 require_relative "comfyui/client"
-require_relative "comfyui/workflows"
