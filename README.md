@@ -31,6 +31,10 @@ name = ComfyUI.upload_image(File.binread("input.png"), filename: "input.png")
 data = ComfyUI.download_output("output_00001_.png")
 ```
 
+## Workflows
+
+For ready-made workflow templates (Flux.1-dev text-to-image, VTracer SVG vectorization) see [comfyui-workflows](https://github.com/erikdebruijn/comfyui-workflows).
+
 ## License
 
 MIT
