@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+require "comfyui"
+
+image_path = ARGV[0]
+if image_path.nil? || image_path.empty?
+  warn "Usage: comfyui-vectorize <image_path>"
+  exit 1
+end
+
+unless File.exist?(image_path)
+  warn "File not found: #{image_path}"
+  exit 1
+end
+
+warn "Uploading image: #{image_path}..."
+image_data = File.binread(image_path)
+filename = File.basename(image_path)
+uploaded_name = Comfyui.upload_image(image_data, filename: filename)
+
+warn "Vectorizing: #{uploaded_name}..."
+result = Comfyui.vectorize(uploaded_name)
+
+output_dir = ENV.fetch("OUTPUT_DIR", File.join(Dir.pwd, "tmp/comfyui_output"))
+FileUtils.mkdir_p(output_dir)
+output_path = File.join(output_dir, result[:filename])
+File.binwrite(output_path, result[:data])
+
+warn "Saved: #{output_path}"
+puts output_path

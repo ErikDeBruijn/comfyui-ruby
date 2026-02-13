@@ -1,0 +1,40 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "input.png"
+    },
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "2": {
+    "class_type": "TS_ImageToSVGStringColor_Vtracer",
+    "inputs": {
+      "image": ["1", 0],
+      "hierarchical": "stacked",
+      "mode": "spline",
+      "filter_speckle": 4,
+      "color_precision": 6,
+      "layer_difference": 16,
+      "corner_threshold": 60,
+      "length_threshold": 4.0,
+      "max_iterations": 10,
+      "splice_threshold": 45,
+      "path_precision": 3
+    },
+    "_meta": {
+      "title": "Convert to SVG (VTracer)"
+    }
+  },
+  "3": {
+    "class_type": "TS_SaveSVGString",
+    "inputs": {
+      "SVG_String": ["2", 0],
+      "filename_prefix": "comfyui_vector"
+    },
+    "_meta": {
+      "title": "Save SVG"
+    }
+  }
+}
