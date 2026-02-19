@@ -4,6 +4,7 @@ PATH
     comfyui (0.1.0)
       faraday (~> 2.0)
       faraday-multipart (~> 1.0)
+      websocket (~> 1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -22,6 +23,7 @@ GEM
     net-http (0.9.1)
       uri (>= 0.11.1)
     uri (1.1.1)
+    websocket (1.2.11)
 
 PLATFORMS
   arm64-darwin-23
