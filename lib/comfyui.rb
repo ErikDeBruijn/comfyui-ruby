@@ -17,7 +17,7 @@ module ComfyUI
     end
 
     def poll_timeout
-      @poll_timeout || 300
+      @poll_timeout || 600
     end
 
     def configure
