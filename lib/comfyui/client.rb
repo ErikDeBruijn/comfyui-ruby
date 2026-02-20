@@ -109,8 +109,8 @@ module ComfyUI
           end
         end
       end
-    rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::ETIMEDOUT, SocketError
-      # WebSocket unavailable — fall back to HTTP polling with estimated progress
+    rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::ETIMEDOUT, EOFError, SocketError
+      # WebSocket unavailable or closed — fall back to HTTP polling with estimated progress
       wait_via_polling(prompt_id, &block)
     ensure
       begin
@@ -132,14 +132,18 @@ module ComfyUI
         yield(step: step, total: total, percent: pct, elapsed: Time.zone.now - start_time)
       when 'executing'
         ed = parsed['data']
-        return unless ed['prompt_id'] == prompt_id && ed['node'].nil?
+        return unless ed['prompt_id'] == prompt_id
 
-        begin
-          socket.close
-        rescue StandardError
-          nil
+        if ed['node'].nil?
+          begin
+            socket.close
+          rescue StandardError
+            nil
+          end
+          throw :completed, fetch_outputs_with_retry(prompt_id)
+        else
+          yield(node: ed['node'], event: :executing, elapsed: Time.zone.now - start_time)
         end
-        throw :completed, fetch_outputs_with_retry(prompt_id)
       when 'execution_error'
         ed = parsed['data']
         return unless ed['prompt_id'] == prompt_id
